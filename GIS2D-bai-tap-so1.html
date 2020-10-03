@@ -87,35 +87,109 @@
 				}
 			}
 		];
-    require([
+    // require([
+    //   "esri/Map",
+    //   "esri/views/MapView",
+    //   "esri/Graphic",
+    //   "esri/layers/GraphicsLayer"
+    // ], function(Map, MapView, Graphic, GraphicsLayer) {
+
+	// 	var map = new Map({
+	// 	basemap: "topo-vector"
+	// 	});
+	// 	 map.on("load", function(){
+    //       map.graphics.enableMouseEvents();
+    //     });
+
+	// 	var view = new MapView({
+	// 	container: "viewDiv",
+	// 	map: map,
+	// 	center: [106.8033387, 10.8739831],
+	// 	zoom: 16,
+    //       highlightOptions: {
+    //         color: "blue"
+    //       }
+	// 	});
+		
+	// 	var graphicsLayer = new GraphicsLayer();
+	// 	map.add(graphicsLayer);
+	// 	jsondata.forEach(function(graphic){
+	// 		graphicsLayer.add(graphic);
+	// 	});
+    // });
+
+	require([
       "esri/Map",
       "esri/views/MapView",
-      "esri/Graphic",
-      "esri/layers/GraphicsLayer"
-    ], function(Map, MapView, Graphic, GraphicsLayer) {
+      "esri/layers/GraphicsLayer",
+      "esri/widgets/Sketch",
+    ], function(Map, MapView, GraphicsLayer, Sketch) {
+       //*** ADD ***//
+      var graphicsLayer = new GraphicsLayer();
 
-		var map = new Map({
-		basemap: "topo-vector"
-		});
-		 map.on("load", function(){
-          map.graphics.enableMouseEvents();
-        });
+      var map = new Map({
+        basemap: "topo-vector",
+        //*** ADD ***//
+        layers: [graphicsLayer]
+      });
+	  
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [106.8033387, 10.8739831],
+        zoom: 16
+      });
 
-		var view = new MapView({
-		container: "viewDiv",
-		map: map,
-		center: [106.8033387, 10.8739831],
-		zoom: 16,
-          highlightOptions: {
-            color: "blue"
-          }
+	  //*** Add draw tool ***//
+      var sketch = new Sketch({
+        view: view,
+        layer: graphicsLayer
+      });
+
+	//   //*** Ve duong tren map ***//
+	//   var polyline = {
+	// 	 type: "polyline",
+	// 	 paths: [
+	// 	   [106.80123584813046, 10.869821274263774],
+	// 	   [106.80233018940856, 10.871022414740189],
+	// 	   [106.80084961003229, 10.87110670511837]
+	// 	 ]
+	// 	};
+
+	// 	var polylineGraphic = new Graphic({
+	// 	 geometry: polyline,
+	// 	 symbol: simpleLineSymbol
+	// 	});
+
+	  //*** Get point from map ***//
+      view.ui.add(sketch, "top-right");
+
+
+	  view.popup.autoOpenEnabled = false;  // Disable the default popup behavior
+
+		view.on("click", function(event) { // Listen for the click event
+		  view.hitTest(event).then(function (hitTestResults){ // Search for features where the user clicked
+			if(hitTestResults.results) {
+			  view.popup.open({ // open a popup to show some of the results
+				location: event.mapPoint,
+				title: "Lat/Long Results",
+				content: "longitude, latitude: " + event.mapPoint.longitude+ ", "+ event.mapPoint.latitude
+			  });
+			}
+		  })
 		});
-		
-		var graphicsLayer = new GraphicsLayer();
-		map.add(graphicsLayer);
-		jsondata.forEach(function(graphic){
-			graphicsLayer.add(graphic);
-		});
+
+	  //*** Display point on map ***//
+	  var graphicsLayer = new GraphicsLayer();
+	  map.add(graphicsLayer);
+	  jsondata.forEach(function(graphic){
+      graphicsLayer.add(graphic);
+	  });
+
+	  
+
+	// graphicsLayer.add(polylineGraphic);
+
     });
   </script>
 </head>
