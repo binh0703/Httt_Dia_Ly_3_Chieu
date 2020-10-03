@@ -1,0 +1,125 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Bai tap ca nhan so 1</title>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+  <script src="https://js.arcgis.com/4.15/"></script>
+  
+  <script>
+	var jsondata = [
+			{
+				geometry: {
+					type: "point",
+					longitude: 106.79863946980397,
+					latitude: 10.87610086751238
+				},
+				symbol: {
+					type: "simple-marker",
+					color: [226, 119, 40],
+					outline: {
+						color: [255, 255, 255],
+						width: 1
+					}
+				},
+				attributes: {
+					name: 'Cột cờ',
+					location: 'Khuôn viên trường ĐH KHTN'
+				},
+				popupTemplate: {
+					title: "{name}",
+					content: "{name} này ở <b>{location}</b>."
+				}
+			},
+			{
+				geometry: {
+					type: "point",
+					longitude: 106.80310266560488, 
+					latitude: 10.869736983522463
+				},
+				symbol: {
+					type: "simple-marker",
+					color: [226, 119, 40],
+					outline: {
+						color: [255, 255, 255],
+						width: 1
+					}
+				},
+				attributes: {
+					name: 'Ghế đá',
+					location: 'Khuôn viên trường ĐH CNTT - UIT'
+				},
+				popupTemplate: {
+					title: "{name}",
+					content: "{name} này ở <b>{location}</b>."
+				}
+			},
+			{
+				geometry: {
+					type: "point",
+					longitude: 106.81104200428915, 
+					latitude: 10.873466826037848
+				},
+				symbol: {
+					type: "simple-marker",
+					color: [226, 119, 40],
+					outline: {
+						color: [255, 255, 255],
+						width: 1
+					}
+				},
+				attributes: {
+					name: 'Cây xanh',
+					location: 'Nghĩa trang liệt sĩ TPHCM'
+				},
+				popupTemplate: {
+					title: "{name}",
+					content: "{name} này ở <b>{location}</b>."
+				}
+			}
+		];
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/layers/GraphicsLayer"
+    ], function(Map, MapView, Graphic, GraphicsLayer) {
+
+		var map = new Map({
+		basemap: "topo-vector"
+		});
+		 map.on("load", function(){
+          map.graphics.enableMouseEvents();
+        });
+
+		var view = new MapView({
+		container: "viewDiv",
+		map: map,
+		center: [106.8033387, 10.8739831],
+		zoom: 16,
+          highlightOptions: {
+            color: "blue"
+          }
+		});
+		
+		var graphicsLayer = new GraphicsLayer();
+		map.add(graphicsLayer);
+		jsondata.forEach(function(graphic){
+			graphicsLayer.add(graphic);
+		});
+    });
+  </script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>
